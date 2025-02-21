@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>delete users</title>
+    <link rel="stylesheet" href="bootstrap.min.css">
+</head>
+<body>
+    <script>
+//checks session if user is logged in on server, if not redirects if unauth and fallback if failed
+    fetch('check_session.php', { method: 'GET' })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.logged_in) {
+                window.location.href = "login.html"; 
+            }
+        })
+        .catch(err => {
+            console.error('Error checking session:', err);
+            window.location.href = "login.html"; 
+        });
+</script>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="index.html">zoom api</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">generate token</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="list_users.html">list users</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="delete_users.html">delete users</a>
+                </li>
+                                    <li class="nav-item">
+                        <a class="nav-link" href="delete_users.html">x command</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="README.html">README</a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container mt-5">
+    <h1 class="text-center">delete users</h1>
+    <form id="deleteUsersForm" enctype="multipart/form-data">
+        <div class="mb-5">
+            <label for="bearer_token" class="form-label">bearer token</label>
+            <input type="text" class="form-control" id="bearer_token" name="bearer_token" required>
+        </div>
+        <div class="mb-5">
+            <label for="csv_file" class="form-label">Upload CSV File</label>
+            <input type="file" class="form-control" id="csv_file" name="csv_file" accept=".csv" required>
+        </div>
+
+        <button type="submit" class="btn btn-danger w-100">DELETE USERS</button>
+    </form>
+    <div id="deleteStatus" class="mt-3"></div>
+</div>
+
+<script>
+    document.getElementById('deleteUsersForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData();
+        const bearer_token = document.getElementById('bearer_token').value;
+        const csv_file = document.getElementById('csv_file').files[0];
+        if (!bearer_token || !csv_file) {
+            alert('All fields are required.');
+            return;
+        }
+
+        formData.append('bearer_token', bearer_token);
+        formData.append('csv_file', csv_file);
+        const statusDiv = document.getElementById('deleteStatus');
+        statusDiv.innerHTML = 'Deleting users, please wait...';
+
+        try {
+            const response = await fetch('delete_users.php', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                if (result.deleted > 0) {
+                    statusDiv.innerHTML = `<p class="text-success">Users deleted successfully: ${result.deleted}</p>`;
+                } else {
+                    statusDiv.innerHTML = `<p class="text-danger">No users were deleted. Please check the logs for errors.</p>`;
+                }
+            } else {
+                statusDiv.innerHTML = `<p class="text-danger">Error: ${result.error || 'Unknown error occurred.'}</p>`;
+            }
+        } catch (error) {
+            console.error(error);
+            statusDiv.innerHTML = `<p class="text-danger">Error: ${error.message}</p>`;
+        }
+    });
+</script>
+</body>
+</html>
+

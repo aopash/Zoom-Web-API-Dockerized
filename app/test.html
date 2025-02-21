@@ -1,0 +1,135 @@
+<style>
+body {
+  color: #fff;
+  font-family: "Proxima Nova", "Helvetica Neue", helvetica, arial, sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 1.5;
+  padding-top: 2rem;
+}
+h1 {
+  color: #506479;
+  font-size: 2.4rem;
+  text-align: center;
+  letter-spacing: 0.3rem;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  line-height: 1;
+}
+
+p {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.window {
+  width: 80%;
+  margin: 0 auto 2rem;
+  box-shadow: 0 0.25rem 0.5rem #12181e;
+  border-radius: 0 0 0.1rem 0.1rem;
+}
+
+.bar {
+  background: #191919;
+  height: 36px;
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.btn-new::before, .btn-new::after, .btn-new {
+  width: 12px;
+  height: 12px;
+  border-radius: 100%;
+  display: block;
+}
+
+.btn-new {
+  background: #f6b73e;
+  position: relative;
+  margin-left: 38px;
+  top: 12px;
+}
+.btn-new::before, .btn-new::after {
+  content: " ";
+  position: absolute;
+}
+.btn-new::before {
+  background: #f55551;
+  margin-left: -20px;
+}
+.btn-new::after {
+  background: #32c146;
+  margin-left: 20px;
+}
+
+.bodyterminal {
+  height: 20rem;
+  background: #232323;
+  padding: 18px;
+}
+.bodyterminal pre {
+  margin: 0;
+}
+.bodyterminal .pulse {
+  -webkit-animation: pulse 1s ease-in-out infinite;
+  -moz-animation: pulse 1s ease-in-out infinite;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@-webkit-keyframes pulse {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@-moz-keyframes pulse {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes pulse {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.command {
+  color: #32c146;
+}
+
+.comment {
+  opacity: 0.5;
+}
+</style>
+<div class="window">
+  <div class="bar">
+    <div class="btn-new">
+    </div>
+  </div>
+  <div class="bodyterminal">
+    <pre><div class="prompt">$ <span class="command">echo zoom api web tool</span></div><div class="prompt">zoom api web tool</div><div class="prompt">$ <span class="command">cat important.txt</span></div><div class="outputterminal"><code>***********************************************
+*                                             *
+*   This is the api tool for managing users   *
+*   in the eu04 cluster. Please checkout      *
+*   the readme page on how to setup O-auth    *
+*   to use tokens.                            *
+*                                             *
+***********************************************</code>
+      </div><div class="prompt">$ <span class="pulse">_</span></div></pre>
+  </div>
+</div>

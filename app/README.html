@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>README.txt</title>
+<link rel="stylesheet" href="https://stackedit.io/style.css" />
+<link rel="stylesheet" href="bootstrap.min.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="stackedit">
+    <script>
+//checks session if user is logged in on server, if not redirects if unauth and fallback if failed
+    fetch('check_session.php', { method: 'GET' })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.logged_in) {
+                window.location.href = "login.html"; 
+            }
+        })
+        .catch(err => {
+            console.error('Error checking session:', err);
+            window.location.href = "login.html"; 
+        });
+</script>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">zoom api</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">generate token</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="list_users.html">list users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="delete_users.html">delete users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="delete_users.html">x command</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="README.html">README</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+<div class="stackedit__html" style="padding-left:0;">
+<h1 align="center" id="title">Zoom API web tool</h1><br>
+<blockquote>
+<p>[!CAUTION]<br>
+Using this tool may cause severe damage</p>
+</blockquote>
+<h4 id="this-this-is-a-wip-project">This this is a WIP</h4>
+<!--<h1 id="topics-and-steps">Topics and Steps</h1><br>-->
+<h2 id="zoom-marketplace">Zoom Marketplace</h2><br>
+<ul>
+<li>Sign in to your organizations vanity url <a href="https://XYZ-se.zoom.us">https://XYZ-se.zoom.us</a> as you normally would.</li>
+<li>Find your way to the marketplace or click this <a href="https://marketplace.zoom.us/">Link to the Marketplace</a></li>
+</ul>
+<h3 id="building-server-to-server-app">Building Server-to-Server app</h3>
+<p>Click down the dropdown menu called “Develop” in the upper right corner of the site, and press on the Build a Server-to-Server App. <br> Choose a valid name for your new project and let’s embark on this journey 🙃<br>
+<img src="https://raw.githubusercontent.com/aopash/svglogo/main/marketplace-build-server-to-server-app.png" alt="finding the button to build the app"></p>
+<h4 id="going-through-the-options">Going through the options</h4>
+<!-- ![Going-through-the-options](https://raw.githubusercontent.com/aopash/svglogo/main/Going-through-the-options.png) -->
+<img align="left" src="https://raw.githubusercontent.com/aopash/svglogo/main/Going-through-the-options.png">
+  <dl>
+  <dt>App Credentials</dt>
+    <dd>Note down your credentials and do not share them with anyone.<br>Account ID - is our instances identifier<br>Client ID - is the equivalent of a username<br>Client Secret - is the equivalent of a password.</dd>
+  <dt>Information</dt>
+    <dd>Here you fill out some basic info related to this app, nothing too important<br>Developer Contact Information<br>- Here you mainly want to include an email that will be contacted incase Zoom decides to deprecate this feature/app.</dd>
+  <dt>Feature</dt>
+    <dd>We don't really care about this option here. Not used, at least not yet.</dd>
+  <dt>Scopes</dt>
+    <dd>Permission scope to allow getting user info and also deleting are as following<br><pre>user:write:admin,user:write,user:read:admin,user:read,user_info:read</pre></dd>
+</dl>
+<br><br><blockquote>
+<p>[!NOTE]<br>
+Note, permissions might change as more features are added.</p>
+</blockquote>
+<br clear="left">
+<h3 id="activating-app">Activating App</h3>
+<p>Simply smash that activation button and WHAM! <br>You have now successfully deployed a Server-to-Server OAUTH app</p>
+<p><img src="https://raw.githubusercontent.com/aopash/svglogo/main/activate-app.png" alt="Activating the app"></p>
+</div>
+</body>
+
+</html>

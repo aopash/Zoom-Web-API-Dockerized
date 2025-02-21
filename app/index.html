@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zoom API</title>
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<script>
+//checks session if user is logged in on server, if not redirects if unauth and fallback if failed
+    fetch('check_session.php', { method: 'GET' })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.logged_in) {
+                window.location.href = "login.html"; 
+            }
+        })
+        .catch(err => {
+            console.error('Error checking session:', err);
+            window.location.href = "login.html"; 
+        });
+</script>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">zoom api</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#generate-token-section">generate token</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="list_users.html">list users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="delete_users.html">delete users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="delete_users.html">x command</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="README.html">README</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <br>
+<style>
+.window {
+  width: 45%;
+  margin: 0 auto 2rem;
+  box-shadow: 0 0.25rem 0.5rem #12181e;
+  border-radius: 0 0 0.1rem 0.1rem;
+}
+
+.bar {
+  background: #191919;
+  height: 36px;
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.btn-new::before, .btn-new::after, .btn-new {
+  width: 12px;
+  height: 12px;
+  border-radius: 100%;
+  display: block;
+}
+
+.btn-new {
+  background: #f6b73e;
+  position: relative;
+  margin-left: 38px;
+  top: 12px;
+}
+.btn-new::before, .btn-new::after {
+  content: " ";
+  position: absolute;
+}
+.btn-new::before {
+  background: #f55551;
+  margin-left: -20px;
+}
+.btn-new::after {
+  background: #32c146;
+  margin-left: 20px;
+}
+
+.bodyterminal {
+  height: 20rem;
+  background: #232323;
+  padding: 18px;
+}
+.bodyterminal pre {
+  margin: 0;
+  color:#fff;
+}
+.bodyterminal .pulse {
+  -webkit-animation: pulse 1s ease-in-out infinite;
+  -moz-animation: pulse 1s ease-in-out infinite;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@-webkit-keyframes pulse {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@-moz-keyframes pulse {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes pulse {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.command {
+  color: #32c146;
+}
+
+.comment {
+  opacity: 0.5;
+}
+</style>
+<div class="window">
+  <div class="bar">
+    <div class="btn-new">
+    </div>
+  </div>
+  <div class="bodyterminal">
+    <pre><div class="prompt">$ <span class="command">echo zoom api web tool</span></div><div class="prompt">zoom api web tool</div><div class="prompt">$ <span class="command">cat important.txt</span></div><div class="outputterminal"><code>***********************************************
+*                                             *
+*   This is the api tool for managing users   *
+*   in the eu04 cluster. Please checkout      *
+*   the readme page on how to setup O-auth    *
+*   to use tokens.                            *
+*                                             *
+***********************************************</code>
+      </div><div class="prompt">$ <span class="pulse">_</span></div></pre>
+  </div>
+</div>
+
+    <div class="container mt-4">
+        <h1 class="text-center">zoom api web</h1>
+        <form id="zoomForm" method="POST" action="functions.php">
+            <div class="mb-3">
+                <label for="accountId" class="form-label">account id</label>
+                <input type="text" class="form-control" id="accountId" name="accountId" required>
+            </div>
+            <div class="mb-3">
+                <label for="clientId" class="form-label">client id</label>
+                <input type="text" class="form-control" id="clientId" name="clientId" required>
+            </div>
+            <div class="mb-3">
+                <label for="clientSecret" class="form-label">client secret</label>
+                <input type="password" class="form-control" id="clientSecret" name="clientSecret" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Generate Token</button>
+        </form>
+        <div id="output" class="mt-4">
+            <h5>Bearer token:</h5>
+            <textarea id="tokenOutput" class="form-control" rows="5" readonly></textarea><br><br><br>
+        </div>
+    </div>
+<script> 
+document.getElementById("zoomForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+
+    fetch("functions.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.access_token) {
+            document.getElementById("tokenOutput").value = data.access_token;
+        } else {
+            alert(data.error || "An error occurred while generating the token.");
+        }
+    })
+    .catch(err => {
+        console.error("Error:", err);
+        alert("Failed to generate token.");
+    });
+});
+</script>
+
+
+
+
+
+<!--    <script src="script.js"></script>-->
+</body>
+</html>
+

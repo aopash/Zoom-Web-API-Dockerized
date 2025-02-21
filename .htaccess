@@ -1,0 +1,6 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_METHOD} !^(GET|POST|OPTIONS|HEAD)$
+    RewriteRule .* - [R=405,L]
+</IfModule>
+

@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  zoom-web-api-container:
+    build: .
+    container_name: zoom-web-api
+    ports:
+      - "6148:80"
+    volumes:
+      - ./app:/var/www/html
+      - ./logs:/var/www/html/logs
+    environment:
+      - APACHE_RUN_USER=www-data
+      - APACHE_RUN_GROUP=www-data
+      - APACHE_LOG_DIR=/var/log/apache2
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:latest
+    container_name: zoom-web-api-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
+

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>api tool login</title>
+    <link rel="stylesheet" href="bootstrap.min.css">
+</head>
+<body>
+    
+    <div class="container mt-5">
+        <h1 class="text-center">login for api tool</h1>
+        <form id="loginForm" method="POST" action="auth.php">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
+        <div id="loginStatus" class="mt-3"></div>
+    </div>
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+
+            const response = await fetch("auth.php", {
+                method: "POST",
+                body: formData,
+            });
+
+            const result = await response.json();
+            const statusDiv = document.getElementById("loginStatus");
+
+            if (result.success) {
+                window.location.href = "index.html";
+            } else {
+                statusDiv.innerHTML = `<p class="text-danger">${result.error}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
+

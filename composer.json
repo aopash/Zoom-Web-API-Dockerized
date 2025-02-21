@@ -1,0 +1,7 @@
+{
+  "require": {
+    "mongodb/mongodb": "^1.20",
+    "psr/log": "^3.0"
+  }
+}
+
