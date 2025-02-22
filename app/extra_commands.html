@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>extra commands</title>
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="index.html">zoom api</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"> <!-- i have not gotten hamburger to work yet, idk when i will get it fixed -->
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="index.html">generate token</a></li>
+                <li class="nav-item"><a class="nav-link" href="list_users.html">list users</a></li>
+                <li class="nav-item"><a class="nav-link" href="delete_users.html">delete users</a></li>
+                <li class="nav-item"><a class="nav-link active" href="extra_commands.html">extra commands</a></li>
+                <li class="nav-item"><a class="nav-link" href="README.html">README</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <h2 class="text-center">extra commands</h2>
+    <div class="mb-3">
+        <label for="commandSelect" class="form-label">Select an option</label>
+        <select class="form-control" id="commandSelect">
+            <option value="fetch_meeting.php">Fetch Meeting Owner</option>
+            <option value="1.php">1</option>
+            <option value="2.php">2</option>
+        </select>
+    </div>
+
+    <form id="fetchCommandForm">
+        <!-- bearer_token -->
+        <div class="mb-3">
+            <label for="bearer_token" class="form-label">Bearer Token</label>
+            <input type="text" class="form-control" id="bearer_token" name="bearer_token" required>
+        </div>
+
+        <div class="mb-3" id="dynamicFieldContainer">
+            <label for="inputField" class="form-label">Input</label>
+            <input type="text" class="form-control dynamic-input" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Execute Command</button>
+    </form>
+
+    <div id="fetchStatus" class="mt-3"></div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const commandSelect = document.getElementById("commandSelect");
+    const dynamicFieldContainer = document.getElementById("dynamicFieldContainer");
+    const fetchStatus = document.getElementById("fetchStatus");
+
+    function updateInputField() {
+        const selectedCommand = commandSelect.value;
+
+        switch (selectedCommand) {
+            case "fetch_meeting.php":
+                dynamicFieldContainer.innerHTML = `<label for="inputField" class="form-label">Meeting ID</label>
+                    <input type="text" class="form-control dynamic-input" id="meeting_id" required>`;
+                break;
+            case "1.php":
+                dynamicFieldContainer.innerHTML = `<label for="inputField" class="form-label">1</label>
+                    <input type="text" class="form-control dynamic-input" id="inputValue" required>`;
+                break;
+            case "2.php":
+                dynamicFieldContainer.innerHTML = `<label for="inputField" class="form-label">2</label>
+                    <input type="text" class="form-control dynamic-input" id="inputValue" required>`;
+                break;
+            default:
+                dynamicFieldContainer.innerHTML = `<label for="inputField" class="form-label">Input</label>
+                    <input type="text" class="form-control dynamic-input" id="inputValue" required>`;
+        }
+    }
+
+    commandSelect.addEventListener("change", updateInputField);
+    updateInputField(); 
+
+    document.getElementById('fetchCommandForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const bearer_token = document.getElementById('bearer_token').value.trim();
+        const selectedCommand = commandSelect.value;
+
+        
+        let inputKey, inputValue;
+        if (selectedCommand === "fetch_meeting.php") {
+            inputKey = "meeting_id"; //"meeting_id" for meetings under fetch_meetings.php since im too lazy to change input value inside fetchmeetings
+            inputValue = document.getElementById("meeting_id")?.value.trim();
+        } else {
+            inputKey = "inputValue"; //will be default for all others, but might make it case specific idk yet
+            inputValue = document.getElementById("inputValue")?.value.trim();
+        }
+
+        if (!bearer_token || !inputValue) {
+            alert("aLL FIELDS ARE REQUIRED.");
+            return;
+        }
+
+        fetchStatus.innerHTML = "Processing request, please wait";
+
+        try {
+            const response = await fetch(selectedCommand, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ bearer_token, [inputKey]: inputValue }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok || data.error) {
+                throw new Error(data.error || "fAILED to fetch data");
+            }
+
+            if (selectedCommand === "fetch_meeting.php" && data.host_email) {
+                fetchStatus.innerHTML = `<h4>Meeting Owner</h4><p><strong>Host Email:</strong> ${data.host_email}</p>`; //sort so we only see host_email from response since we dont care about anything else
+            } else {
+                fetchStatus.innerHTML = `
+                    <h4>Response</h4>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            fetchStatus.innerHTML = `<p class="text-danger">${error.message}</p>`;
+        }
+    });
+});
+</script>
+</body>
+</html>

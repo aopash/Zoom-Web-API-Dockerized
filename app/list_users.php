@@ -13,7 +13,9 @@ if (empty($bearer_token)) {
 }
 
 //prep url for the request
-$url = "https://api.zoom.us/v2/users?page_size=300";
+//$url = "https://api.zoom.us/v2/users?page_size=300";
+//for correct cluster
+$url = "https://eu01api-www4local.zoom.us/v2/users?page_size=300";
 $headers = [
     "Authorization: Bearer $bearer_token",
     "Content-Type: application/json"
