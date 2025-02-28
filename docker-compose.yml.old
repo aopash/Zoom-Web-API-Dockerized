@@ -1,11 +1,13 @@
+version: '3.8'
+
 services:
-  zoom-web-api:
-    image: aopash/zoom-web-api:latest
+  zoom-web-api-container:
+    build: .
     container_name: zoom-web-api
-    restart: unless-stopped
     ports:
       - "6148:80"
     volumes:
+      - ./app:/var/www/html
       - ./logs:/var/www/html/logs
     environment:
       - APACHE_RUN_USER=www-data
@@ -17,7 +19,6 @@ services:
   mongo:
     image: mongo:latest
     container_name: zoom-web-api-mongodb
-    restart: unless-stopped
     ports:
       - "27017:27017"
     volumes:
@@ -25,3 +26,4 @@ services:
 
 volumes:
   mongo_data:
+

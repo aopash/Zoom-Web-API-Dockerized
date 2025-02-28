@@ -1,11 +1,14 @@
+version: '3.8'
+
 services:
-  zoom-web-api:
+  zoom-web-api-container:
     image: aopash/zoom-web-api:latest
     container_name: zoom-web-api
     restart: unless-stopped
     ports:
       - "6148:80"
     volumes:
+      - ./app:/var/www/html
       - ./logs:/var/www/html/logs
     environment:
       - APACHE_RUN_USER=www-data
