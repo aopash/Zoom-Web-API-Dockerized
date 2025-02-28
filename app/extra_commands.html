@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", function() {
         let inputKey, inputValue;
         if (selectedCommand === "fetch_meeting.php") {
             inputKey = "meeting_id"; //"meeting_id" for meetings under fetch_meetings.php since im too lazy to change input value inside fetchmeetings
-            inputValue = document.getElementById("meeting_id")?.value.trim();
+            inputValue = document.getElementById("meeting_id")?.value.replace(/\s/g, "").trim();
         } else {
             inputKey = "inputValue"; //will be default for all others, but might make it case specific idk yet
             inputValue = document.getElementById("inputValue")?.value.trim();
