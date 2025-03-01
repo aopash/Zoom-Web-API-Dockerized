@@ -7,7 +7,10 @@ use MongoDB\Client;
 
 header('Content-Type: application/json');
 //starts mongo connection
-$client = new Client('mongodb://mongo:27017');
+//$client = new Client('mongodb://mongo:27017');
+$client = new Client('mongodb://zoom-web-api-mongodb:27017');
+
+
 $collection = $client->zoom_api->users;
 
 //modify for your institution or setup
