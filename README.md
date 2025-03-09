@@ -4,6 +4,14 @@ This repository provides a Dockerized version of a Zoom API web interface for ma
 
 ---
 
+## **Prerequisites**
+- **Git**: [Install Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+- **Docker**: [Install Docker](https://docs.docker.com/engine/install/ubuntu/#installation-methods)
+- **Docker Compose** (if using `docker-compose.yml`): [Install Docker Compose](https://docs.docker.com/compose/install/)
+
+---
+
+
 ## **Installation and Deployment**
 
 ### **Option 1: Pull and Run from DockerHub**
@@ -71,15 +79,6 @@ For running with MongoDB and logging enabled:
    ```sh
    docker-compose down
    ```
-
----
-
-## **Prerequisites**
-- **Git**: [Install Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-- **Docker**: [Install Docker](https://docs.docker.com/engine/install/ubuntu/#installation-methods)
-- **Docker Compose** (if using `docker-compose.yml`): [Install Docker Compose](https://docs.docker.com/compose/install/)
-
----
 
 ## **License**
 This project is licensed under the MIT License. See the `LICENSE` file for details.
