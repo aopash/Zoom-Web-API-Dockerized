@@ -83,3 +83,38 @@ For running with MongoDB and logging enabled:
 ## **License**
 This project is licensed under the MIT License. See the `LICENSE` file for details.
 
+
+---
+
+> [!CAUTION]
+> Using this tool may cause severe damage
+
+<h2 id="zoom-marketplace">Zoom Marketplace</h2><br>
+<ul>
+<li>Sign in to your organizations vanity url <a href="https://XYZ-se.zoom.us">https://XYZ-se.zoom.us</a> as you normally would.</li>
+<li>Find your way to the marketplace or click this <a href="https://marketplace.zoom.us/">Link to the Marketplace</a></li>
+</ul>
+<h3 id="building-server-to-server-app">Building Server-to-Server app</h3>
+<p>Click down the dropdown menu called “Develop” in the upper right corner of the site, and press on the Build a Server-to-Server App. <br> Choose a valid name for your new project and let’s embark on this journey 🙃<br>
+<img src="https://raw.githubusercontent.com/aopash/svglogo/main/marketplace-build-server-to-server-app.png" alt="finding the button to build the app"></p>
+<h4 id="going-through-the-options">Going through the options</h4>
+<!-- ![Going-through-the-options](https://raw.githubusercontent.com/aopash/svglogo/main/Going-through-the-options.png) -->
+<img align="left" src="https://raw.githubusercontent.com/aopash/svglogo/main/Going-through-the-options.png">
+  <dl>
+  <dt>App Credentials</dt>
+    <dd>Note down your credentials and do not share them with anyone.<br>Account ID - is our instances identifier<br>Client ID - is the equivalent of a username<br>Client Secret - is the equivalent of a password.</dd>
+  <dt>Information</dt>
+    <dd>Here you fill out some basic info related to this app, nothing too important<br>Developer Contact Information<br>- Here you mainly want to include an email that will be contacted incase Zoom decides to deprecate this feature/app.</dd>
+  <dt>Feature</dt>
+    <dd>We don't really care about this option here. Not used, at least not yet.</dd>
+  <dt>Scopes</dt>
+    <dd>Permission scope to allow getting user info and also deleting are as following<br><pre>user:write:admin,user:write,user:read:admin,user:read,user_info:read</pre></dd>
+</dl>
+<br><br><blockquote>
+<p>[!NOTE]<br>
+Note, permissions might change as more features are added.</p>
+</blockquote>
+<br clear="left">
+<h3 id="activating-app">Activating App</h3>
+<p>Simply smash that activation button and WHAM! <br>You have now successfully deployed a Server-to-Server OAUTH app</p>
+<p><img src="https://raw.githubusercontent.com/aopash/svglogo/main/activate-app.png" alt="Activating the app"></p>
