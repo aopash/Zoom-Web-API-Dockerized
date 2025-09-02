@@ -44,130 +44,16 @@
     <div id="deleteStatus" class="mt-3" style="max-height: 500px; overflow-y: auto;"></div>
 </div>
 
-
-
-
-
-
 <script>
-document.getElementById('deleteUsersForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    const bearerToken = document.getElementById('bearer_token').value;
-    const csvFile = document.getElementById('csv_file').files[0];
-    const statusDiv = document.getElementById('deleteStatus');
-
-    if (!bearerToken || !csvFile) {
-        statusDiv.innerHTML = '<p class="text-danger">All fields are required.</p>';
-        return;
-    }
-
-    formData.append('bearer_token', bearerToken);
-    formData.append('csv_file', csvFile);
-    statusDiv.innerHTML = '';
-
-    try {
-        const response = await fetch('delete_users.php', { method: 'POST', body: formData });
-
-        if (!response.body) {
-            throw new Error('Streaming not supported');
-        }
-
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-        let buffer = '';
-
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-
-            buffer += decoder.decode(value, { stream: true });
-            const lines = buffer.split('\n');
-            buffer = lines.pop(); // Keep incomplete line
-
-            for (const line of lines) {
-                const trimmed = line.trim();
-                if (trimmed.startsWith('{')) {
-                    try {
-                        const data = JSON.parse(trimmed);
-                        updateStatus(data, statusDiv);
-                    } catch (err) {
-                        console.warn('Parse error:', err, line);
-                    }
-                }
-            }
-        }
-    } catch (error) {
-        if (!error.message.includes('abort')) {
-            statusDiv.innerHTML += `<p class="text-danger"><strong>Error:</strong> ${error.message}</p>`;
-        }
-    }
-});
-
-
-function updateStatus(data, statusDiv) {
-    const progressLineId = 'progressLine';
-    let progressLine = document.getElementById(progressLineId);
-
-    if (data.error) {
-        statusDiv.innerHTML += `<p class="text-danger"><strong>Error:</strong> ${data.error}</p>`;
-        return;
-    }
-
-    if (data.status === 'start') {
-        statusDiv.innerHTML += `<p>Starting deletion of <strong>${data.total}</strong> users...</p>`;
-        statusDiv.innerHTML += `<div class="progress mb-3">
-            <div id="progressBar" class="progress-bar bg-danger" style="width:0%">0/${data.total}</div>
-        </div>`;
-        // Single status line
-        statusDiv.innerHTML += `<p id="${progressLineId}" class="text-muted small">
+document.getElementById("deleteUsersForm").addEventListener("submit",async e=>{e.preventDefault();let t=new FormData,r=document.getElementById("bearer_token").value,s=document.getElementById("csv_file").files[0],n=document.getElementById("deleteStatus");if(!r||!s){n.innerHTML='<p class="text-danger">All fields are required.</p>';return}t.append("bearer_token",r),t.append("csv_file",s),n.innerHTML="";try{let l=await fetch("delete_users.php",{method:"POST",body:t});if(!l.body)throw Error("Streaming not supported");let a=l.body.getReader(),o=new TextDecoder,d="";for(;;){let{done:i,value:g}=await a.read();if(i)break;d+=o.decode(g,{stream:!0});let p=d.split("\n");for(let u of(d=p.pop(),p)){let c=u.trim();if(c.startsWith("{"))try{let f=JSON.parse(c);updateStatus(f,n)}catch(m){console.warn("Parse error:",m,u)}}}}catch(y){y.message.includes("abort")||(n.innerHTML+=`<p class="text-danger"><strong>Error:</strong> ${y.message}</p>`)}});function updateStatus(e,t){let r="progressLine",s=document.getElementById(r);if(e.error){t.innerHTML+=`<p class="text-danger"><strong>Error:</strong> ${e.error}</p>`;return}if("start"===e.status){t.innerHTML+=`<p>Starting deletion of <strong>${e.total}</strong> users...</p>`,t.innerHTML+=`<div class="progress mb-3">
+            <div id="progressBar" class="progress-bar bg-danger" style="width:0%">0/${e.total}</div>
+        </div>`,t.innerHTML+=`<p id="${r}" class="text-muted small">
         Waiting for first result...
-        </p>`;
-        return;
-    }
-
-    if (data.status === 'progress') {
-        const bar = document.getElementById('progressBar');
-        if (bar) {
-            const progress = Math.round((data.current / data.total) * 100);
-            bar.style.width = `${progress}%`;
-            bar.textContent = `${data.current}/${data.total}`;
-        }
-
-        const icon = data.success ? '-' : '+';
-        const message = data.success
-            ? 'Deleted'
-            : data.response ? JSON.parse(data.response)?.message || data.httpCode : data.httpCode;
-
-        // Update single line
-        if (!progressLine) {
-            progressLine = document.getElementById(progressLineId);
-        }
-
-        if (progressLine) {
-            progressLine.innerHTML = `
-                Processing <strong>${data.current}</strong> of <strong>${data.total}</strong> |
-                Last: <strong>${data.identifier}</strong> ${icon} (${message}) |
-                <span class="text-success">Deleted: ${data.deleted}</span>
-            `;
-        }
-
-        // Auto-scroll to keep top visible
-        statusDiv.scrollTop = 0;
-        return;
-    }
-
-    if (data.status === 'complete') {
-        const color = data.deleted > 0 ? 'success' : 'warning';
-        const msg = data.deleted === data.total
-            ? `All ${data.deleted} users deleted!`
-            : `${data.deleted} of ${data.total} deleted.`;
-
-        statusDiv.innerHTML += `<p class="text-${color} mt-3"><strong>${msg}</strong></p>`;
-        return;
-    }
-}
-
+        </p>`;return}if("progress"===e.status){let n=document.getElementById("progressBar");if(n){let l=Math.round(e.current/e.total*100);n.style.width=`${l}%`,n.textContent=`${e.current}/${e.total}`}let a=e.success?"-":"+",o=e.success?"Deleted":e.response&&JSON.parse(e.response)?.message||e.httpCode;s||(s=document.getElementById(r)),s&&(s.innerHTML=`
+                Processing <strong>${e.current}</strong> of <strong>${e.total}</strong> |
+                Last: <strong>${e.identifier}</strong> ${a} (${o}) |
+                <span class="text-success">Deleted: ${e.deleted}</span>
+            `),t.scrollTop=0;return}if("complete"===e.status){let d=e.deleted>0?"success":"warning",i=e.deleted===e.total?`All ${e.deleted} users deleted!`:`${e.deleted} of ${e.total} deleted.`;t.innerHTML+=`<p class="text-${d} mt-3"><strong>${i}</strong></p>`;return}}
 </script>
 
 
