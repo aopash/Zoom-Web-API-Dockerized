@@ -119,7 +119,7 @@ do {
                     $feature = $settingsData['feature'];
 
                     $hasLargeMeeting = ($feature['large_meeting'] ?? false) === true;
-                    $hasZoomEvent = ($featrue['zoom_event'] ?? false) === true;
+                    $hasZoomEvent = ($feature['zoom_event'] ?? false) === true;
                     $meetingCapacity = intval($feature['meeting_capacity']) ?? 0;
                     $webinarCapacity = intval($feature['webinar_capacity']) ?? 0;
 
