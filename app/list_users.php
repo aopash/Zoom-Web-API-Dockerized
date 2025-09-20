@@ -12,6 +12,12 @@ if (empty($bearer_token)) {
     exit;
 }
 
+$exclude_filter = $data['exclude_filter'] ?? '';
+$exclude_terms = ['webinar', 'zoom', 'meeting', 'room', 'admin', 'localhost'];
+if (!empty($exclude_filter)){
+    $user_terms = array_filter(array_map('trim', explode(',', $exclude_filter)));
+    $exclude_terms = array_merge($exclude_terms, $user_terms);
+}
 //prep url for the request
 //$url = "https://api.zoom.us/v2/users?page_size=300";
 //for correct cluster
@@ -61,6 +67,26 @@ do {
                 continue; //skip servicekonto
             }
 
+            if (!empty($exclude_terms)){
+                $searchIn = [
+                    $user['email'] ?? '',
+                    $user['first_name'] ?? '',
+                    $user['last_name'] ?? '',
+                ];
+                $shouldExclude = false;
+                foreach ($exclude_terms as $term){
+                    foreach ($searchIn as $field){
+                        if (stripos($field, $term) !== false){
+							$shouldExclude = true;
+							break 2; //break both loops
+						}
+                    }
+                }
+                if ($shouldExclude){
+					continue; //skip this user
+				}
+            }
+
             $lastLoginTime = $user['last_login_time'] ?? '';
             if ($lastLoginTime) {
                 //converts the last login to timestamps
@@ -68,6 +94,44 @@ do {
 
                 //if last login was more than 9 month ago, prep the users in more readable format
                 if ($lastLoginTimestamp < $nineMonthsAgo) {
+
+                    $userEmail = $user['email'];
+                    $settingsUrl = "https://eu01api-www4local.zoom.us/v2/users/" . urlencode($userEmail) . "/settings?custom_query_fields=feature";
+                    
+                    $chSettings = curl_init($settingsUrl);
+                    curl_setopt($chSettings, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($chSettings, CURLOPT_HTTPHEADER, $headers);
+                    $settingsResponse = curl_exec($chSettings);
+                    $settingsErr = curl_error($chSettings);
+                    curl_close($chSettings);
+
+                    if ($settingsErr){
+                        error_log('API error for $userEmail: $settingsErr');
+                        continue;
+                    }
+
+                    $settingsData = json_decode($settingsResponse, true);
+
+                    if (!isset($settingsData['feature'])){
+                        continue;
+                    }
+
+                    $feature = $settingsData['feature'];
+
+                    $hasLargeMeeting = ($feature['large_meeting'] ?? false) === true;
+                    $hasZoomEvent = ($featrue['zoom_event'] ?? false) === true;
+                    $meetingCapacity = intval($feature['meeting_capacity']) ?? 0;
+                    $webinarCapacity = intval($feature['webinar_capacity']) ?? 0;
+
+                    if (
+                        $hasLargeMeeting ||
+                        $hasZoomEvent ||
+                        $meetingCapacity > 500 ||
+                        $webinarCapacity > 500
+                    ){
+                        continue;
+                    }
+
                     $userData = [
                         $user['id'],
                         $user['email'],
@@ -110,4 +174,3 @@ do {
 
 fclose($outputFile);
 exit;
-

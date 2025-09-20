@@ -61,6 +61,11 @@
                 <label for="bearer_token" class="form-label">bearer token</label>
                 <input type="text" class="form-control" id="bearer_token" name="bearer_token" required>
             </div>
+            <div>
+                <label for="exclude_filter" class="form-label">Comma-separated exclusion:</label>
+                <input type="text" class="form-control" id="exclude_filter" name="exclude_filter" placeholder="e.g. admin,medieteknik,webinar">
+                <small class="form-text text-muted">Users with email, first name or last name containing any of the terms will be excluded.</small>
+            </div>
             <button type="submit" class="btn btn-primary w-100">export users</button>
         </form>
         <div id="fetchStatus" class="mt-3"></div>
@@ -70,6 +75,7 @@
         e.preventDefault();
 
         const bearer_token = document.getElementById('bearer_token').value;
+        const exclude_filter = document.getElementById('exclude_filter').value;
 
         if (!bearer_token) {
             alert('Bearer Token is required.');
@@ -88,6 +94,7 @@
                 },
                 body: JSON.stringify({
                     bearer_token,
+                    exclude_filter,
                 }),
             });
 
